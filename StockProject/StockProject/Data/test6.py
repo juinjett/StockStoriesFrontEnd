@@ -1,0 +1,13 @@
+import json
+data={}
+temp_data = {'status': 'ok', 'totalResults': 4, 'articles': [{'source': {'id': 'the-next-web', 'name': 'The Next Web'}, 'author': 'Mix', 'title': 'Lightning Network already has more active nodes than Bitcoin Cash', 'description': 'The Lightning Network might still be in its infancy stages, but it already has more active nodes running on its network than Bitcoin Cash.\r\n\r\nStatistics currently show that Lightning ...', 'url': 'https://thenextweb.com/hardfork/2018/03/27/bitcoin-cash-lightning-network/', 'urlToImage': 'https://cdn0.tnwcdn.com/wp-content/blogs.dir/1/files/2018/03/bitcoin-cash-lightning-social.png', 'publishedAt': '2018-03-27T13:05:09Z'}, {'source': {'id': 'crypto-coins-news', 'name': 'Crypto Coins News'}, 'author': None, 'title': 'Bitcoin Price Dips Below $8,000, Wider Market Struggles to Hold Above $300 Billion', 'description': 'Join our community of 10 000 traders on Hacked.com for just $39 per month. The Bitcoin price once again dipped below $8,000 on Tuesday, demonstrating an inability to break out of its prolonged slump. The wider markets failed to fare much better, placing the c…', 'url': 'https://www.ccn.com/bitcoin-price-dips-below-8000-wider-market-struggles-to-hold-above-300-billion/', 'urlToImage': 'https://www.ccn.com/wp-content/uploads/2017/11/Bitcoin-split.jpg', 'publishedAt': '2018-03-27T12:34:19Z'}, {'source': {'id': 'crypto-coins-news', 'name': 'Crypto Coins News'}, 'author': None, 'title': 'Nelson Mandela Golden Hands Collection Goes to Bitcoin Exchange', 'description': "Nelson Mandela's hands were immortalized by how he changed the course of history, so maybe it's destiny that solid gold casts of his hands will go to\xa0a bitcoin buyer.", 'url': 'https://www.ccn.com/nelson-mandela-golden-hands-collection-goes-to-bitcoin-exchange/', 'urlToImage': 'https://www.ccn.com/wp-content/uploads/2018/03/Nelson-Mandela.jpg', 'publishedAt': '2018-03-26T21:53:34Z'}, {'source': {'id': 'crypto-coins-news', 'name': 'Crypto Coins News'}, 'author': None, 'title': "HBO's Silicon Valley Gives Nod to Bitcoin in Opening Title Intro", 'description': "It's about time the network gave bitcoin a cameo in its tech-fueled hit comedy series. Silicon Valley, which is a show that is roughly based on co-creator Mike Judge's time in the Valley during the eighties, added the logo of US-bitcoin exchange Coinbase to t…", 'url': 'https://www.ccn.com/hbos-silicon-valley-gives-nod-to-bitcoin-in-opening/', 'urlToImage': 'https://www.ccn.com/wp-content/uploads/2018/03/Silicon-Valley.jpg', 'publishedAt': '2018-03-26T18:52:49Z'}]}
+
+output=[]
+output_url=[]
+
+def fetch_news(topic):
+	data.append(temp_data)
+
+fetch_news(temp_data)
+
+print(data)

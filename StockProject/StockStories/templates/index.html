@@ -1,0 +1,119 @@
+{% load socialaccount %}
+{% providers_media_js %}
+<html>
+  <head>
+    <title>StockStories</title>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link href='http://fonts.googleapis.com/css?family=Great+Vibes' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Oleo+Script' rel='stylesheet' type='text/css'>
+    <script src="https://rawgit.com/mattboldt/typed.js/master/lib/typed.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <style type = "text/css">
+      body{
+        background-color:#f7f7f7;
+
+      }
+      .stock{
+        font-family: "Times New Roman";
+        font-size:30px;
+        font-weight:bold;
+      }
+      .stories{
+        font: 30 30px/0.8 'Great Vibes', Helvetica, sans-serif;
+      }
+      .container{
+
+      }
+      .content{
+        position:absolute;
+        top:40%;
+        left:5%;
+        text-align:center;
+        color:#839cc4;
+      }
+      nav{
+
+      }
+      p{
+        font-size:30px;
+      }
+      .icon-bar{
+        background-color:#839cc4;
+      }
+      ul{
+        text-align:right;
+      }
+      li{
+        list-style-type:none;
+
+      }
+      .navbar{
+        color:#839cc4;
+      }
+      .nav{
+        float:right;
+      }
+      li a:hover{
+        background-color:red;
+      }
+      li :hover a{
+
+      }
+      #typing{
+
+      }
+      footer{
+        position:absolute;
+        bottom:0;
+        height:30px;
+        color:#839cc4;
+      }
+    </style>
+  </head>
+  <body>
+      <div class="navbar">
+        <div class="container">
+          <div class="navbar-header">
+            <a href="#" class="navbar-brand"><span class="stock">Stock</span><span class="stories">Stories</span></a>
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+          </div>
+          <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+              <li class="active"><a href="">About</a></li>
+              <li><a href="about">Team</a></li>
+              <li><a href="login.html" target="_blank">Login</a></li>
+              <li><a href="/accounts/signup/" target="_blank">Signup</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class = "container content">
+        <p>
+          You name the stock, we <span id="typing"></span> the stories.
+        </p>
+      </div>
+      <div class="container">
+        <footer>
+          &#169; StockStories, 2018
+        </footer>
+      </div>
+      <script>
+        new Typed('#typing', {
+          strings: ["TELL","PREDICT"],
+          typeSpeed: 130,
+          backSpeed: 80
+        });
+      </script>
+  </body>
+</html>

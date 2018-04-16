@@ -1,0 +1,58 @@
+<html>
+  <head>
+    <title>StockStories-Signup</title>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style type = "text/css">
+      .tbox2{
+        width:410px;
+
+      }
+      .container{
+        margin: 10px 50px 10px 50px;
+        position:absolute;
+        top:17%;
+        left:3%;
+
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h3>Let's get started!</h3>
+      <form class="signupform form-inline">
+        <div class="form-group">
+          <input type="text" class="tbox1 form-control" name="firstname" placeholder="First Name"  />
+        </div>
+        <div class="form-group">
+          <input type="text" class="tbox1 form-control" name="lastname" placeholder="Last Name"  />
+        </div>
+      </form>
+      <form class="signupform">
+        <div class="form-group">
+          <input type="email" class="tbox2 form-control" name="emailaddress" placeholder="Email Address"  />
+        </div>
+        <div class="tbox2 input-group form-group">
+          <input type="text" class="form-control" name="username" placeholder="StockStories Username"  />
+          <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+        </div>
+        <div class="tbox2 input-group form-group">
+          <input type="password" class="tbox2 form-control" name="password" placeholder="Password (min. 10 characters)"  />
+          <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+        </div>
+        <div class="tbox2 input-group form-group">
+          <input type="password" class="tbox2 form-control" name="password" placeholder="Confirm Password"  />
+          <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+        </div>
+        <div class="form-group">
+          <input type="submit" value="Sign Up" class="btn btn-success" name="signup"  />
+        </div>
+      </form>
+    </div>
+  </body>
+</html>

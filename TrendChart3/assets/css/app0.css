@@ -1,0 +1,65 @@
+body {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  /* shape-rendering: crispEdges; */
+}
+
+.x.axis path {
+  display: none;
+}
+
+.line {
+  fill: none;
+  stroke: green;
+  stroke-width: 1.5px;
+}
+
+.red_line {
+  fill: none;
+  stroke: red;
+  stroke-width: 1.5px;
+}
+
+.green_text {
+  color: green;
+  font-size: 20px;
+}
+
+.red_text {
+  color: red;
+  font-size: 20px;
+}
+
+svg text {
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+}
+svg text::selection {
+    background: none;
+}
+
+.title {
+  font-size: 25px;
+}
+
+div {
+  width: 1200px;
+  margin: auto;
+}
+
+.article_row {
+   /* top: 0px; */
+   margin: 10px auto;
+   border-width: 1px;
+   border-bottom-width:1px;
+   border-bottom-color:black;
+   border-bottom-style: solid;
+   width: 100%;
+}

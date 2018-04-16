@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>MOUSEOVER</title>
+    <link rel="stylesheet" href="assets/css/app.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+  </head>
+
+  <body>
+    <div style="text-align:center">
+      <h1 class="head"><span>GOOGL</span></h1>
+    </div>
+    <div style="text-align:center">
+      <h2>$<span id="main_price">Price</span>  <span id="change_ratio">Changes</span></h2>
+      <!-- <h4 id="change_ratio">Changes</h4> -->
+    </div>
+
+<!-- SVG container -->
+    <div style="text-align:center" class="svg_container">
+    </div>
+
+    <div class="" >
+      <button type="button" id="M_1" class="btn btn-primary">1D</button>
+      <button type="button" id="M_2" class="btn btn-primary">3M</button>
+      <button type="button" id="M_3" class="btn btn-primary">1Y</button>
+      <button type="button" id="M_4" class="btn btn-primary">ALL</button>
+    </div>
+
+<!-- News Scroll container -->
+    <div class="news_container">
+        <div class="article_row">
+          <div class="title">
+            <h4>News</h4>
+          </div>
+        </div>
+        <div class="article_row" id="a_1">
+            <div class="title">
+              article title
+            </div>
+            <div class="publish_info">
+              article time
+            </div>
+        </div>
+        <div class="article_row" id="a_2">
+            <div class="title">
+              article title
+            </div>
+            <div class="publish_info">
+              article time
+            </div>
+        </div>
+        <div class="article_row" id="a_3">
+            <div class="title">
+              article title
+            </div>
+            <div class="publish_info">
+              article time
+            </div>
+        </div>
+        <div class="article_row" id="a_4">
+            <div class="title">
+              article title
+            </div>
+            <div class="publish_info">
+              article time
+            </div>
+        </div>
+    </div>
+
+    <div class="">
+      <button type="button" class="btn btn-primary">Show More</button>
+    </div>
+
+
+<!-- Stats container -->
+    <div class="">
+      <h4>Stats</h4>
+    </div>
+    <div class="stats_container">
+      <div class="row">
+        <div class="col">
+          <table class="table table-striped">
+            <tbody>
+              <tr>
+                <th scope="row">OPEN</th>
+                <td id="open" style="text-align:right">Mark</td>
+              </tr>
+              <tr>
+                <th scope="row">HIGH</th>
+                <td id="high" style="text-align:right">Jacob</td>
+              </tr>
+              <tr>
+                <th scope="row">LOW</th>
+                <td id="low" style="text-align:right">Larry</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col">
+          <table class="table table-striped">
+            <tbody>
+              <tr>
+                <th scope="row">CLOSE</th>
+                <td id="close" style="text-align:right">Mark</td>
+              </tr>
+              <tr>
+                <th scope="row">VOLUME</th>
+                <td id="volume" style="text-align:right">Jacob</td>
+              </tr>
+              <tr>
+                <th scope="row">DIV/YEILD</th>
+                <td id="open" style="text-align:right">0.00</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="assets/js/app.js"></script>
+  </body>
+</html>

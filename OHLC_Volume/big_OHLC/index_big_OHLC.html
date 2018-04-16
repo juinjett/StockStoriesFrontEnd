@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <link rel="stylesheet" href="cschart.css"> -->
+    <style media="screen">
+    /* Container
+    /* =============================================== */
+    #demobox {
+        margin: auto;
+        min-height: 310px;
+        min-width: 700px;
+        max-width: 1000px;
+        /* padding-left: 30px; */
+        /* color: #333; */
+        color: #333; }
+
+
+    #csbox {
+        color: #000;
+        /* color: #fff; */
+        background: #fff;
+        margin: 10px auto;
+        width: 800px;
+        height: 420px;
+        font-size: small;
+        text-align: center; }
+
+    /* Candlestick Chart
+    /* =============================================== */
+    #chart1 .grid { stroke-opacity: .3; }
+    #chart1 .axis line,
+    #chart1 .axis.xaxis path { fill: none; stroke: black; shape-rendering: crispEdges; }
+    #chart1 .tick text { font: 10px sans-serif; fill: black; stroke-opacity: 1; }
+    #chart1 .axis.yaxis path { fill: none; stroke: black; }
+
+    #chart1 .bands rect { fill: darkgrey; fill-opacity: 0; stroke-opacity: 0; pointer-events: all; shape-rendering: crispEdges; }
+    #chart1 .bands .hoved { fill-opacity: .6; }
+    #chart1 .sticks rect { pointer-events: none; shape-rendering: crispEdges; }
+    #chart1 .sticks .rise, #chart1 .candles .rise { fill: green; }
+    #chart1 .sticks .fall, #chart1 .candles .fall { fill: red; }
+    #chart1 .sticks .hoved { stroke: black; }
+    #chart1 .candles .hoved { stroke: black; }
+    #chart1 .candles rect { pointer-events: none; shape-rendering: crispEdges; }
+
+    #chart1 .bbmn { fill: none; stroke: cyan; stroke-width: 1.5px; pointer-events: none; }
+    #chart1 .bbup { fill: none; stroke: green; stroke-width: 1.5px; pointer-events: none; }
+    #chart1 .bbdn { fill: none; stroke: crimson; stroke-width: 1.5px; pointer-events: none; }
+
+    #chart1 .volumebar { fill: darkgrey; }
+    #chart1 .volumebar rect { pointer-events: none; }
+    #chart1 .volumebar .hoved { fill: black; }
+    #chart1 .sigmabar { fill: darkgrey; }
+    #chart1 .sigmabar rect { pointer-events: none; }
+    #chart1 .sigmabar .hoved { fill: black; }
+
+    #option    { width: 230px; height: 25px; float: left; padding-top: 5px; }
+    #option input { cursor: pointer; border-radius: 5px; color: #fff; background: #696d75; border: none; }
+    #option input {
+                    -webkit-box-shadow: 0px 1px 3px 0px rgba(0,0,0,0.75);
+                    -moz-box-shadow: 0px 1px 3px 0px rgba(0,0,0,0.75);
+                    box-shadow: 0px 1px 3px 0px rgba(0,0,0,0.75);
+                  }
+    #option .active { cursor: auto; background: #94979d; }
+    #option .active {
+                    -webkit-box-shadow: none;
+                    -moz-box-shadow: none;
+                    box-shadow: none;
+                  }
+    #infobar   { width: 570px; height: 25px; float: left; padding-top: 5px; text-align: left; font-family: sans-serif; }
+    .infohead  { width: 140px; height: 25px; margin: 0px 2px; float: left; }
+    .infobox   { width: 70px; height: 30px; margin: 0px 2px; float: left; }
+
+    #volchart .volbar .volfill { fill: crimson; }
+    #volchart .sigbar .sigfill { fill: crimson; }
+    #volchart input { cursor: pointer; }
+
+    </style>
+
+</head>
+<body>
+    <div id="demobox">
+        <div id="csbox">
+            <div id="option">
+                <input id="oneM" name="1M" type="button" value="1M"/>
+                <input id="threeM" name="3M" type="button" value="3M" />
+                <input id="sixM" name="6M" type="button" value="6M" />
+                <input id="oneY" name="1Y" type="button" value="1Y" />
+                <input id="twoY" name="2Y" type="button" value="2Y" />
+                <input id="fourY" name="4Y" type="button" value="4Y" />
+            </div>
+            <div id="infobar">
+                <div id="infodate" class="infohead"></div>
+                <div id="infoopen" class="infobox"></div>
+                <div id="infohigh" class="infobox"></div>
+                <div id="infolow" class="infobox"></div>
+                <div id="infoclose" class="infobox"></div>
+                <div id="infovolume" class="infobox"></div>
+            </div>
+            <div id="chart1"></div>
+        </div> <!-- csbox -->
+    </div> <!-- demobox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js" charset="utf-8"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-queue/3.0.7/d3-queue.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
+    <!-- <script src="cschart.js"></script>
+    <script src="csbars.js"></script>
+    <script src="csheader.js"></script>
+    <script src="csdataprep.js"></script>
+    <script src="csmain.js"></script> -->
+
+    <script type="text/javascript">
+      // csbars
+      function barchart() {
+
+        var margin = {top: 300, right: 30, bottom: 10, left: 5 },
+            width = 765, height = 60, mname = "mbar1";
+
+        var MValue = "volume";
+
+        function barrender(selection) {
+          selection.each(function(data) {
+
+            var x = d3.scale.ordinal()
+                .rangeBands([0, width]);
+
+            var y = d3.scale.linear()
+                .rangeRound([height, 0]);
+
+            var xAxis = d3.svg.axis()
+                .scale(x)
+                .tickFormat(d3.time.format(TFormat[TIntervals[TPeriod]]));
+
+            var yAxis = d3.svg.axis()
+                .scale(y)
+                .ticks(Math.floor(height/50));
+
+            var svg = d3.select(this).select("svg")
+               .append("g")
+                  .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            x.domain(data.map(function(d) { return d.timestamp; }));
+            y.domain([0, d3.max(data, function(d) { return d[MValue]; })]).nice();
+
+            var xtickdelta   = Math.ceil(60/(width/data.length))
+            xAxis.tickValues(x.domain().filter(function(d, i) { return !((i+Math.floor(xtickdelta/2)) % xtickdelta); }));
+
+            svg.append("g")
+                .attr("class", "axis yaxis")
+                .attr("transform", "translate(" + width + ",0)")
+                .call(yAxis.orient("right").tickFormat("").tickSize(0));
+
+      //      svg.append("g")
+      //          .attr("class", "axis yaxis")
+      //          .attr("transform", "translate(0,0)")
+      //          .call(yAxis.orient("left"));
+
+            var barwidth    = x.rangeBand();
+            var fillwidth   = (Math.floor(barwidth*0.9)/2)*2+1;
+            var bardelta    = Math.round((barwidth-fillwidth)/2);
+
+            var mbar = svg.selectAll("."+mname+"bar")
+                .data([data])
+              .enter().append("g")
+                .attr("class", mname+"bar");
+
+            mbar.selectAll("rect")
+                .data(function(d) { return d; })
+              .enter().append("rect")
+                .attr("class", mname+"fill")
+                .attr("x", function(d) { return x(d.timestamp) + bardelta; })
+                .attr("y", function(d) { return y(d[MValue]); })
+                .attr("class", function(d, i) { return mname+i; })
+                .attr("height", function(d) { return y(0) - y(d[MValue]); })
+                .attr("width", fillwidth);
+          });
+        } // barrender
+        barrender.mname = function(value) {
+                	if (!arguments.length) return mname;
+                	mname = value;
+                	return barrender;
+            	};
+
+        barrender.margin = function(value) {
+                	if (!arguments.length) return margin.top;
+                	margin.top = value;
+                	return barrender;
+            	};
+
+        barrender.MValue = function(value) {
+                	if (!arguments.length) return MValue;
+                	MValue = value;
+                	return barrender;
+            	};
+
+      return barrender;
+      } // barchart
+
+      //cschart
+      function cschart() {
+
+          var margin = {top: 0, right: 30, bottom: 40, left: 5},
+              width = 765, height = 300, Bheight = 380;
+
+          function csrender(selection) {
+            selection.each(function() {
+
+              var interval = TIntervals[TPeriod];
+
+              var minimal  = d3.min(genData, function(d) { return d.low; });
+              var maximal  = d3.max(genData, function(d) { return d.high; });
+
+              var extRight = width + margin.right
+              var x = d3.scale.ordinal()
+                  .rangeBands([0, width]);
+
+              var y = d3.scale.linear()
+                  .rangeRound([height, 0]);
+
+              var xAxis = d3.svg.axis()
+                  .scale(x)
+                  .tickFormat(d3.time.format(TFormat[interval]));
+
+              var yAxis = d3.svg.axis()
+                  .scale(y)
+                  .ticks(Math.floor(height/50));
+
+              x.domain(genData.map(function(d) { return d.timestamp; }));
+              y.domain([minimal, maximal]).nice();
+
+              var xtickdelta   = Math.ceil(60/(width/genData.length))
+              xAxis.tickValues(x.domain().filter(function(d, i) { return !((i+Math.floor(xtickdelta/2)) % xtickdelta); }));
+
+              var barwidth    = x.rangeBand();
+              var candlewidth = Math.floor(d3.min([barwidth*0.8, 13])/2)*2+1;
+              var delta       = Math.round((barwidth-candlewidth)/2);
+
+              d3.select(this).select("svg").remove();
+              var svg = d3.select(this).append("svg")
+                  .attr("width", width + margin.left + margin.right)
+                  .attr("height", Bheight + margin.top + margin.bottom)
+                .append("g")
+                  .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+              svg.append("g")
+                  .attr("class", "axis xaxis")
+                  .attr("transform", "translate(0," + height + ")")
+                  .call(xAxis.orient("bottom").outerTickSize(0));
+
+              svg.append("g")
+                  .attr("class", "axis yaxis")
+                  .attr("transform", "translate(" + width + ",0)")
+                  .call(yAxis.orient("right").tickSize(0));
+
+              svg.append("g")
+                  .attr("class", "axis grid")
+                  .attr("transform", "translate(" + width + ",0)")
+                  .call(yAxis.orient("left").tickFormat("").tickSize(width).outerTickSize(0));
+
+              var bands = svg.selectAll(".bands")
+                  .data([genData])
+                .enter().append("g")
+                  .attr("class", "bands");
+
+              bands.selectAll("rect")
+                  .data(function(d) { return d; })
+                .enter().append("rect")
+                  .attr("x", function(d) { return x(d.timestamp) + Math.floor(barwidth/2); })
+                  .attr("y", 0)
+                  .attr("height", Bheight)
+                  .attr("width", 1)
+                  .attr("class", function(d, i) { return "band"+i; })
+                  .style("stroke-width", Math.floor(barwidth));
+
+              var stick = svg.selectAll(".sticks")
+                  .data([genData])
+                .enter().append("g")
+                  .attr("class", "sticks");
+
+              stick.selectAll("rect")
+                  .data(function(d) { return d; })
+                .enter().append("rect")
+                  .attr("x", function(d) { return x(d.timestamp) + Math.floor(barwidth/2); })
+                  .attr("y", function(d) { return y(d.high); })
+                  .attr("class", function(d, i) { return "stick"+i; })
+                  .attr("height", function(d) { return y(d.low) - y(d.high); })
+                  .attr("width", 1)
+                  .classed("rise", function(d) { return (d.close>d.open); })
+                  .classed("fall", function(d) { return (d.open>d.close); });
+
+              var candle = svg.selectAll(".candles")
+                  .data([genData])
+                .enter().append("g")
+                  .attr("class", "candles");
+
+              candle.selectAll("rect")
+                  .data(function(d) { return d; })
+                .enter().append("rect")
+                  .attr("x", function(d) { return x(d.timestamp) + delta; })
+                  .attr("y", function(d) { return y(d3.max([d.open, d.close])); })
+                  .attr("class", function(d, i) { return "candle"+i; })
+                  .attr("height", function(d) { return y(d3.min([d.open, d.close])) - y(d3.max([d.open, d.close])); })
+                  .attr("width", candlewidth)
+                  .classed("rise", function(d) { return (d.close>d.open); })
+                  .classed("fall", function(d) { return (d.open>d.close); });
+
+            });
+          } // csrender
+
+          csrender.Bheight = function(value) {
+                  	if (!arguments.length) return Bheight;
+                  	Bheight = value;
+                  	return csrender;
+              	};
+
+      return csrender;
+      } // cschart
+
+      //csdataprep
+      function genType(d) {
+        d.timestamp  = parseDate(d.timestamp);
+        d.low        = +d.low;
+        d.high       = +d.high;
+        d.open       = +d.open;
+        d.close      = +d.close;
+        d.volume   = +d.volume;
+        // d.VOLATILITY = +d.VOLATILITY;
+        return d;
+      }
+
+      function timeCompare(date, interval) {
+        if (interval == "week")       { var durfn = d3.time.monday(date); }
+        else if (interval == "month") { var durfn = d3.time.month(date); }
+        else { var durfn = d3.time.day(date); }
+        return durfn;
+      }
+
+      function dataCompress(data, interval) {
+        var compressedData  = d3.nest()
+                       .key(function(d) { return timeCompare(d.timestamp, interval); })
+                       .rollup(function(v) { return {
+                               timestamp:   timeCompare(d3.values(v).pop().timestamp, interval),
+                               open:        d3.values(v).shift().open,
+                               low:         d3.min(v, function(d) { return d.low;  }),
+                               high:        d3.max(v, function(d) { return d.high; }),
+                               close:       d3.values(v).pop().close,
+                               volume:    d3.mean(v, function(d) { return d.volume; }),
+                               // VOLATILITY:  d3.mean(v, function(d) { return d.VOLATILITY; })
+                              }; })
+                       .entries(data).map(function(d) { return d.values; });
+
+        return compressedData;
+      }
+
+      //csheader
+      function csheader() {
+
+      function cshrender(selection) {
+        selection.each(function(data) {
+
+          var interval   = TIntervals[TPeriod];
+          var format     = (interval=="month")?d3.time.format("%b %Y"):d3.time.format("%b %d %Y");
+          var dateprefix = (interval=="month")?"Month of ":(interval=="week")?"Week of ":"";
+          d3.select("#infodate").text(dateprefix + format(data.timestamp));
+          d3.select("#infoopen").text("O " + data.open);
+          d3.select("#infohigh").text("H " + data.high);
+          d3.select("#infolow").text("L " + data.low);
+          d3.select("#infoclose").text("C " + data.close);
+          d3.select("#infovolume").text("V " + (data.volume/1000000).toFixed(3) + "M");
+
+        });
+      } // cshrender
+
+      return cshrender;
+      } // csheader
+
+      // csmain
+      var parseDate    = d3.time.format("%Y-%m-%d").parse;
+      var TPeriod      = "3M";
+      var TDays        = {"1M":21, "3M":63, "6M":126, "1Y":252, "2Y":504, "4Y":1008 };
+      var TIntervals   = {"1M":"day", "3M":"day", "6M":"day", "1Y":"week", "2Y":"week", "4Y":"month" };
+      var TFormat      = {"day":"%d %b '%y", "week":"%d %b '%y", "month":"%b '%y" };
+      var genRaw, genData;
+
+      // (function() {
+      //     d3.csv("daily_GOOGL.csv", genType, function(data) {
+      //       genRaw         = data;
+      //       mainjs();
+      //     });
+      // }());
+
+      function go(file_path) {
+          d3.csv(file_path, genType, function(data) {
+            genRaw         = data;
+            mainjs();
+          });
+      };
+
+      function toSlice(data) { return data.slice(-TDays[TPeriod]); }
+
+      function mainjs() {
+        var toPress    = function() { genData = (TIntervals[TPeriod]!="day")?dataCompress(toSlice(genRaw), TIntervals[TPeriod]):toSlice(genRaw); };
+        toPress(); displayAll();
+        d3.select("#oneM").on("click",   function(){ TPeriod  = "1M"; toPress(); displayAll(); });
+        d3.select("#threeM").on("click", function(){ TPeriod  = "3M"; toPress(); displayAll(); });
+        d3.select("#sixM").on("click",   function(){ TPeriod  = "6M"; toPress(); displayAll(); });
+        d3.select("#oneY").on("click",   function(){ TPeriod  = "1Y"; toPress(); displayAll(); });
+        d3.select("#twoY").on("click",   function(){ TPeriod  = "2Y"; toPress(); displayAll(); });
+        d3.select("#fourY").on("click",  function(){ TPeriod  = "4Y"; toPress(); displayAll(); });
+      }
+
+      function displayAll() {
+          changeClass();
+          displayCS();
+          displayGen(genData.length-1);
+      }
+
+      function changeClass() {
+          if (TPeriod =="1M") {
+              d3.select("#oneM").classed("active", true);
+              d3.select("#threeM").classed("active", false);
+              d3.select("#sixM").classed("active", false);
+              d3.select("#oneY").classed("active", false);
+              d3.select("#twoY").classed("active", false);
+              d3.select("#fourY").classed("active", false);
+          } else if (TPeriod =="6M") {
+              d3.select("#oneM").classed("active", false);
+              d3.select("#threeM").classed("active", false);
+              d3.select("#sixM").classed("active", true);
+              d3.select("#oneY").classed("active", false);
+              d3.select("#twoY").classed("active", false);
+              d3.select("#fourY").classed("active", false);
+          } else if (TPeriod =="1Y") {
+              d3.select("#oneM").classed("active", false);
+              d3.select("#threeM").classed("active", false);
+              d3.select("#sixM").classed("active", false);
+              d3.select("#oneY").classed("active", true);
+              d3.select("#twoY").classed("active", false);
+              d3.select("#fourY").classed("active", false);
+          } else if (TPeriod =="2Y") {
+              d3.select("#oneM").classed("active", false);
+              d3.select("#threeM").classed("active", false);
+              d3.select("#sixM").classed("active", false);
+              d3.select("#oneY").classed("active", false);
+              d3.select("#twoY").classed("active", true);
+              d3.select("#fourY").classed("active", false);
+          } else if (TPeriod =="4Y") {
+              d3.select("#oneM").classed("active", false);
+              d3.select("#threeM").classed("active", false);
+              d3.select("#sixM").classed("active", false);
+              d3.select("#oneY").classed("active", false);
+              d3.select("#twoY").classed("active", false);
+              d3.select("#fourY").classed("active", true);
+          } else {
+              d3.select("#oneM").classed("active", false);
+              d3.select("#threeM").classed("active", true);
+              d3.select("#sixM").classed("active", false);
+              d3.select("#oneY").classed("active", false);
+              d3.select("#twoY").classed("active", false);
+              d3.select("#fourY").classed("active", false);
+          }
+      }
+
+      function displayCS() {
+          var chart       = cschart().Bheight(380);
+          d3.select("#chart1").call(chart);
+          var chart       = barchart().mname("volume").margin(320).MValue("volume");
+          d3.select("#chart1").datum(genData).call(chart);
+          // var chart       = barchart().mname("sigma").margin(380).MValue("VOLATILITY");
+          // d3.select("#chart1").datum(genData).call(chart);
+          hoverAll();
+      }
+
+      function hoverAll() {
+          d3.select("#chart1").select(".bands").selectAll("rect")
+                .on("mouseover", function(d, i) {
+                    d3.select(this).classed("hoved", true);
+                    d3.select(".stick"+i).classed("hoved", true);
+                    d3.select(".candle"+i).classed("hoved", true);
+                    d3.select(".volume"+i).classed("hoved", true);
+                    d3.select(".sigma"+i).classed("hoved", true);
+                    displayGen(i);
+                })
+                .on("mouseout", function(d, i) {
+                    d3.select(this).classed("hoved", false);
+                    d3.select(".stick"+i).classed("hoved", false);
+                    d3.select(".candle"+i).classed("hoved", false);
+                    d3.select(".volume"+i).classed("hoved", false);
+                    d3.select(".sigma"+i).classed("hoved", false);
+                    displayGen(genData.length-1);
+                });
+      }
+
+      function displayGen(mark) {
+          var header      = csheader();
+          d3.select("#infobar").datum(genData.slice(mark)[0]).call(header);
+      }
+
+      var file_path = "daily_GOOGL.csv";
+
+      go(file_path);
+
+    </script>
+</body>
+</html>
