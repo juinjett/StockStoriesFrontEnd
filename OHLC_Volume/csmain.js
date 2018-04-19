@@ -12,6 +12,7 @@ var genRaw, genData;
     });
 }());
 
+// function toSlice(data) { return data.slice(TDays[TPeriod]); }
 function toSlice(data) { return data.slice(-TDays[TPeriod]); }
 
 function mainjs() {

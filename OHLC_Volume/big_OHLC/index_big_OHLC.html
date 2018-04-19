@@ -397,7 +397,8 @@
           });
       };
 
-      function toSlice(data) { return data.slice(-TDays[TPeriod]); }
+      function toSlice(data) { return data.slice(0, TDays[TPeriod]); }
+      // function toSlice(data) { return data.slice(-TDays[TPeriod]); }
 
       function mainjs() {
         var toPress    = function() { genData = (TIntervals[TPeriod]!="day")?dataCompress(toSlice(genRaw), TIntervals[TPeriod]):toSlice(genRaw); };
