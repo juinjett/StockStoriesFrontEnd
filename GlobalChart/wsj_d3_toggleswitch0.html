@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.9/topojson.min.js"></script>
+  <script src="http://datamaps.github.io/scripts/0.4.4/datamaps.world.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  <style type="text/css">
+
+  body{
+    background-color:#f9f9f9;
+  }
+
+  .buttons{
+    margin-left:20px;
+    margin-top:20px;
+  }
+
+  .buttonright{
+    float:right;
+    position:relative;
+    bottom:30px;
+    margin-right:20px;
+  }
+
+  .btn-secondary{
+    border: 1px solid #b8b9ba;
+    border-radius:4px;
+  }
+
+  .active{
+    background-color: #585859 !important;
+    color:white !important;
+  }
+
+  .switch {
+position: relative;
+display: inline-block;
+width: 120px;
+height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {display:none;}
+
+/* The slider */
+.slider {
+position: absolute;
+cursor: pointer;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background-color: #8ad88c;
+-webkit-transition: .4s;
+transition: .4s;
+}
+
+.slider:before {
+position: absolute;
+content: "";
+height: 26px;
+width: 26px;
+left: 4px;
+bottom: 4px;
+background-color: white;
+-webkit-transition: .4s;
+transition: .4s;
+}
+
+input:checked + .slider {
+background-color: gray;
+}
+
+input:focus + .slider {
+box-shadow: 0 0 1px gray;
+}
+
+input:checked + .slider:before {
+-webkit-transform: translateX(85px);
+-ms-transform: translateX(85px);
+transform: translateX(85px);
+}
+
+/* Rounded sliders */
+.slider.round {
+border-radius: 34px;
+}
+
+.slider.round:before {
+border-radius: 50%;
+}
+
+.slider:after
+{
+content:'OPEN';
+color: white;
+display: block;
+position: absolute;
+transform: translate(-50%,-50%);
+top: 50%;
+left: 50%;
+font-size: 10px;
+font-family: Verdana, sans-serif;
+}
+
+input:checked + .slider:after
+{
+content:'CLOSE';
+}
+
+svg{
+  display:block;
+  margin:auto;
+}
+
+#openmap1{
+  background-color:#f9f9f9;
+  margin-left:20px;
+  margin-top:40px;
+  width:1800px;
+  height:800px;
+}
+
+#openmap2{
+  background-color:#f9f9f9;
+  margin-left:20px;
+  margin-top:40px;
+  width:1800px;
+  height:800px;
+}
+
+#openmap3{
+  background-color:#f9f9f9;
+  margin-left:20px;
+  margin-top:40px;
+  width:1800px;
+  height:800px;
+}
+
+#openmap4{
+  background-color:#f9f9f9;
+  margin-left:20px;
+  margin-top:40px;
+  width:1800px;
+  height:800px;
+}
+
+#closemap1{
+  background-color:#f9f9f9;
+  margin-left:20px;
+  margin-top:40px;
+  width:1800px;
+  height:800px;
+}
+
+#closemap2{
+  background-color:#f9f9f9;
+  margin-left:20px;
+  margin-top:40px;
+  width:1800px;
+  height:800px;
+}
+
+#closemap3{
+  background-color:#f9f9f9;
+  margin-left:20px;
+  margin-top:40px;
+  width:1800px;
+  height:800px;
+}
+
+#closemap4{
+  background-color:#f9f9f9;
+  margin-left:20px;
+  margin-top:40px;
+  width:1800px;
+  height:800px;
+}
+
+  </style>
+
+</head>
+<body>
+
+  <div class="buttons">
+
+  <button type = "button" id = "showMap1" class="btn btn-secondary">1D</button> <button type="button" id = "showMap2" class="btn btn-secondary">YTD</button> <button type="button" id = "showMap3" class="btn btn-secondary">1Y</button> <button type="button" id = "showMap4" class="btn btn-secondary">3Y</button>
+
+  </div>
+
+  <div class="buttonright">
+
+
+    <label class="switch">
+          <input type="checkbox" id="toggle" checked="true" />
+          <div class="slider round"></div>
+      </label>
+
+  </div>
+
+  <div id = "openmap1">
+
+  </div>
+  <div id ="closemap1">
+
+  </div>
+  <div id = "openmap2">
+
+  </div>
+  <div id ="closemap2">
+
+  </div>
+  <div id = "openmap3">
+
+  </div>
+  <div id ="closemap3">
+
+  </div>
+  <div id = "openmap4">
+
+  </div>
+  <div id ="closemap4">
+
+  </div>
+
+  <script type="text/javascript">
+
+  $(document).ready(function(){
+
+    $("#showMap1").addClass("active");
+    $("#openmap1").show();
+    $("#openmap2").hide();
+    $("#openmap3").hide();
+    $("#openmap4").hide();
+    $("#closemap1").hide();
+    $("#closemap2").hide();
+    $("#closemap3").hide();
+    $("#closemap4").hide();
+  });
+
+  $("button").click(function(){
+  $("button").removeClass("active");
+  $(this).addClass("active");
+});
+
+$("#showMap1").click(function(){
+  $("#openmap1").show();
+  $("#openmap2").hide();
+  $("#openmap3").hide();
+  $("#openmap4").hide();
+  $("#closemap1").hide();
+  $("#closemap2").hide();
+  $("#closemap3").hide();
+  $("#closemap4").hide();
+  if ($(this).hasClass("active")){
+  $("#toggle").click(function() {
+    if ($(this).is(":checked")) {
+      $("#openmap1").hide();
+      $("#closemap1").show();
+      $("#openmap2").hide();
+      $("#openmap3").hide();
+      $("#openmap4").hide();
+      $("#closemap2").hide();
+      $("#closemap3").hide();
+      $("#closemap4").hide();
+    } else {
+      $("#openmap1").show();
+      $("#closemap1").hide();
+      $("#openmap2").hide();
+      $("#openmap3").hide();
+      $("#openmap4").hide();
+      $("#closemap2").hide();
+      $("#closemap3").hide();
+      $("#closemap4").hide();
+    }
+  });
+}
+});
+
+$("#showMap2").click(function(){
+  $("#openmap1").hide();
+  $("#openmap2").show();
+  $("#openmap3").hide();
+  $("#openmap4").hide();
+  $("#closemap1").hide();
+  $("#closemap2").hide();
+  $("#closemap3").hide();
+  $("#closemap4").hide();
+  if ($(this).hasClass("active")){
+  $("#toggle").click(function() {
+    if ($(this).is(":checked")) {
+      $("#openmap1").hide();
+      $("#closemap2").show();
+      $("#openmap2").hide();
+      $("#openmap3").hide();
+      $("#openmap4").hide();
+      $("#closemap1").hide();
+      $("#closemap3").hide();
+      $("#closemap4").hide();
+    } else {
+      $("#openmap2").show();
+      $("#closemap1").hide();
+      $("#openmap1").hide();
+      $("#openmap3").hide();
+      $("#openmap4").hide();
+      $("#closemap2").hide();
+      $("#closemap3").hide();
+      $("#closemap4").hide();
+    }
+  });
+}
+});
+
+$("#showMap3").click(function(){
+  $("#openmap1").hide();
+  $("#openmap2").hide();
+  $("#openmap3").show();
+  $("#openmap4").hide();
+  $("#closemap1").hide();
+  $("#closemap2").hide();
+  $("#closemap3").hide();
+  $("#closemap4").hide();
+  if ($(this).hasClass("active")){
+  $("#toggle").click(function() {
+    if ($(this).is(":checked")) {
+      $("#openmap1").hide();
+      $("#closemap3").show();
+      $("#openmap2").hide();
+      $("#openmap3").hide();
+      $("#openmap4").hide();
+      $("#closemap1").hide();
+      $("#closemap2").hide();
+      $("#closemap4").hide();
+    } else {
+      $("#openmap3").show();
+      $("#closemap1").hide();
+      $("#openmap1").hide();
+      $("#openmap2").hide();
+      $("#openmap4").hide();
+      $("#closemap2").hide();
+      $("#closemap3").hide();
+      $("#closemap4").hide();
+    }
+  });
+}
+});
+
+$("#showMap4").click(function(){
+  $("#openmap1").hide();
+  $("#openmap2").hide();
+  $("#openmap3").hide();
+  $("#openmap4").show();
+  $("#closemap1").hide();
+  $("#closemap2").hide();
+  $("#closemap3").hide();
+  $("#closemap4").hide();
+  if ($(this).hasClass("active")){
+  $("#toggle").click(function() {
+    if ($(this).is(":checked")) {
+      $("#openmap1").hide();
+      $("#closemap4").show();
+      $("#openmap2").hide();
+      $("#openmap3").hide();
+      $("#openmap4").hide();
+      $("#closemap1").hide();
+      $("#closemap3").hide();
+      $("#closemap2").hide();
+    } else {
+      $("#openmap4").show();
+      $("#closemap1").hide();
+      $("#openmap1").hide();
+      $("#openmap3").hide();
+      $("#openmap2").hide();
+      $("#closemap2").hide();
+      $("#closemap3").hide();
+      $("#closemap4").hide();
+    }
+  });
+}
+});
+
+
+$(function() {
+  if ($("#showMap1").hasClass("active")){
+  $("#toggle").click(function() {
+    if ($(this).is(":checked")) {
+      $("#openmap1").hide();
+      $("#closemap1").show();
+      $("#openmap2").hide();
+      $("#openmap3").hide();
+      $("#openmap4").hide();
+      $("#closemap2").hide();
+      $("#closemap3").hide();
+      $("#closemap4").hide();
+    } else {
+      $("#openmap1").show();
+      $("#closemap1").hide();
+      $("#openmap2").hide();
+      $("#openmap3").hide();
+      $("#openmap4").hide();
+      $("#closemap2").hide();
+      $("#closemap3").hide();
+      $("#closemap4").hide();
+    }
+  });
+}
+});
+
+
+
+
+
+
+
+  var data = [{
+    color: "#ff0000",
+    label: 'Less than -1%'
+  }, {
+    color: "#ff3838",
+    label: '-1 to -0.5%'
+  }, {
+    color: "#ff7575",
+    label: '-0.5 to 0%'
+  }, {
+    color: "#96dd7e",
+    label: '0 to +0.5%'
+  }, {
+    color: "#5bbc3a",
+    label: '+0.5 to +1%'
+  }, {
+    color: "#218700",
+    label: 'Greater than +1%'
+  }]
+
+  var width = 1000;
+  var height = 50;
+
+  var svg = d3.select('body')
+    .append('svg')
+    .attr('width', width)
+    .attr('height', height);
+
+
+    var grad = svg.append('defs')
+      .append('linearGradient')
+      .attr('id', 'grad')
+      .attr('x1', '0%')
+      .attr('x2', '100%')
+      .attr('y1', '0%')
+      .attr('y2', '0%');
+
+      grad.selectAll('stop')
+        .data(data)
+        .enter()
+        .append('stop')
+        .attr('offset', function(d, i) {
+          return (i / data.length) * 100 + '%';
+        })
+        .style('stop-color', function(d) {
+          return d.color;
+        })
+        .style('stop-opacity', 0.9);
+
+        svg.append('rect')
+          .attr('x', 0)
+          .attr('y', 0)
+          .attr('width', width)
+          .attr('height', height / 2)
+          .attr('fill', 'url(#grad)');
+
+        var g = svg.append('g')
+          .selectAll('.label')
+          .data(data)
+          .enter();
+
+        g.append('line')
+          .style('stroke', function(d) {
+            return d.color;
+          })
+          .style('stroke-width', 5)
+          .attr('x1',function(d,i){
+            return xPos(i)
+          })
+          .attr('x2',function(d,i){
+            return xPos(i)
+          })
+          .attr('y1',function(d,i){
+            return height / 2;
+          })
+           .attr('y2',function(d,i){
+            return height
+          });
+
+
+        g.append('text')
+          .text(function(d){
+            return d.label;
+          })
+          .attr('transform',function(d,i){
+            return 'translate(' + (xPos(i) + 15) + ',' + ((height) - 7) + ')';
+          })
+
+        //g.append("title")
+        //.attr("title","yo mamam");
+
+        // add title to scale //
+
+        function xPos(i){
+          return (width / data.length) * i;
+        }
+
+//$("svg").css({bottom: 200, left: 1000, position:'relative'});
+
+var openMap1 = new Datamap(
+
+      {
+          scope: 'world',
+          projection: 'equirectangular',
+          element: document.getElementById('openmap1'),
+          // projection: 'mercator',
+
+          geographyConfig: {
+                              borderWidth: 0.2,
+                              borderColor: 'white',
+                          /*  highlightBorderColor: 'black',
+                              highlightBorderWidth: 0.5,
+                              highlightFillColor: '#FFEC38',
+
+                              highlightOnHover: true,
+                              popupOnHover: true, //disable the popup while hovering
+  */
+                              popupTemplate: function(geography, csvdata1) {
+                                  if ( !csvdata1 ) return;  // makes sure that the tooltip is shown only if there is data
+                                  return '<div class="hoverinfo">'  + 'Country: <strong>'+csvdata1.country +'</strong>'+ '<br>Index: <strong>'+csvdata1.index + '</strong>'+ '<br> Change:  <strong>' +  csvdata1.daily_change_percent + '</strong> %';},
+                              },
+          fills: {
+            '0 to +0.5%':"#96dd7e",
+            '+0.5% to +1%':"#5bbc3a",
+            'Greater than +1%':"#218700",
+            '0 to -0.5%':"#ff7575",
+            '-0.5% to -1%':"#ff3838",
+            'Less than -1%':"#ff0000",
+            'closed1':'rgba(150,221,126,0.3)',
+            'closed2':'rgba(91,188,58,0.3)',
+            'closed3':'rgba(33,135,0,0.3)',
+            'closed4': 'rgba(255,117,117,0.3)',
+            'closed5':'rgba(255,56,56,0.3)',
+            'closed6':'rgba(255,0,0,0.3)',
+            defaultFill: '#d6d6d6'
+          },
+          data: {}
+});
+
+
+
+d3.csv("wsj_dataset_compact.csv", function(error, csvdata1) {
+
+for (var i=0;i<csvdata1.length;i++)
+
+      {
+        csvdata1[i].fillKey = {};
+
+        if (csvdata1[i].daily_change_percent >= 0 && csvdata1[i].daily_change_percent<=0.5 && csvdata1[i].market_status == 'open')
+        {
+          csvdata1[i].fillKey = '0 to +0.5%';
+        }
+
+        if (csvdata1[i].daily_change_percent >= 0 && csvdata1[i].daily_change_percent<=0.5 && csvdata1[i].market_status == 'closed')
+        {
+          csvdata1[i].fillKey = 'closed1';
+        }
+
+        if (csvdata1[i].daily_change_percent >0.5 && csvdata1[i].daily_change_percent<=1 && csvdata1[i].market_status == 'open')
+        {
+          csvdata1[i].fillKey = '+0.5% to +1%';
+        }
+
+        if (csvdata1[i].daily_change_percent >0.5 && csvdata1[i].daily_change_percent<=1 && csvdata1[i].market_status == 'closed')
+        {
+          csvdata1[i].fillKey = 'closed2';
+        }
+
+        if (csvdata1[i].daily_change_percent > 1 && csvdata1[i].market_status == 'open') {  csvdata1[i].fillKey = 'Greater than +1%'; }
+        if (csvdata1[i].daily_change_percent > 1 && csvdata1[i].market_status == 'closed') {  csvdata1[i].fillKey = 'closed3'; }
+
+        if (csvdata1[i].daily_change_percent < 0 && csvdata1[i].daily_change_percent>= -0.5 && csvdata1[i].market_status == 'open') {  csvdata1[i].fillKey = '0 to -0.5%'; }
+        if (csvdata1[i].daily_change_percent < 0 && csvdata1[i].daily_change_percent>= -0.5 && csvdata1[i].market_status == 'closed') {  csvdata1[i].fillKey = 'closed4'; }
+
+        if (csvdata1[i].daily_change_percent < -0.5 && csvdata1[i].daily_change_percent >= -1 && csvdata1[i].market_status == 'open') {  csvdata1[i].fillKey = '-0.5% to -1%'; }
+        if (csvdata1[i].daily_change_percent < -0.5 && csvdata1[i].daily_change_percent >= -1 && csvdata1[i].market_status == 'closed') {  csvdata1[i].fillKey = 'closed5'; }
+
+        if (csvdata1[i].daily_change_percent < -1 && csvdata1[i].market_status == 'open') {  csvdata1[i].fillKey = 'Less than -1%'; }
+        if (csvdata1[i].daily_change_percent < -1 && csvdata1[i].market_status == 'closed') {  csvdata1[i].fillKey = 'closed6'; }
+
+        csvdata1[ csvdata1[i].country_code] = csvdata1[i] ;
+        //console.log(csvdata1[i]);
+        delete  csvdata1[i].country_code;
+
+        delete  csvdata1[i] ;
+          }
+
+
+openMap1.updateChoropleth(csvdata1);
+}
+);
+
+var closedMap1 = new Datamap(
+
+      {
+          scope: 'world',
+          projection: 'equirectangular',
+          element: document.getElementById('closemap1'),
+          // projection: 'mercator',
+
+          geographyConfig: {
+                              borderWidth: 0.2,
+                              borderColor: 'white',
+                          /*  highlightBorderColor: 'black',
+                              highlightBorderWidth: 0.5,
+                              highlightFillColor: '#FFEC38',
+
+                              highlightOnHover: true,
+                              popupOnHover: true, //disable the popup while hovering
+  */
+                              popupTemplate: function(geography, csvdata1) {
+                                  if ( !csvdata1 ) return;  // makes sure that the tooltip is shown only if there is data
+                                  return '<div class="hoverinfo">'  + 'Country: <strong>'+csvdata1.country +'</strong>'+ '<br>Index: <strong>'+csvdata1.index + '</strong>'+ '<br> Change:  <strong>' +  csvdata1.daily_change_percent + '</strong> %';},
+                              },
+          fills: {
+            '0 to +0.5%':"#96dd7e",
+            '+0.5% to +1%':"#5bbc3a",
+            'Greater than +1%':"#218700",
+            '0 to -0.5%':"#ff7575",
+            '-0.5% to -1%':"#ff3838",
+            'Less than -1%':"#ff0000",
+            'closed1':'rgba(150,221,126,0.3)',
+            'closed2':'rgba(91,188,58,0.3)',
+            'closed3':'rgba(33,135,0,0.3)',
+            'closed4': 'rgba(255,117,117,0.3)',
+            'closed5':'rgba(255,56,56,0.3)',
+            'closed6':'rgba(255,0,0,0.3)',
+            defaultFill: '#d6d6d6'
+          },
+          data: {},
+////////////////
+          done: function(closedMap1) {
+
+      closedMap1.svg.selectAll('.datamaps-subunit').on('click', function(geography, csvdata1) {
+        var localData = closedMap1.options.data[geo.id]
+        if ( localData && localData.numberOfThings ) {
+         alert(localData.numberOfThings)
+        }
+        ///////////////////////////
+        console.log("yoipeeeee!")
+      })
+    }
+});
+
+
+
+d3.csv("wsj_dataset_compact.csv", function(error, csvdata1) {
+
+for (var i=0;i<csvdata1.length;i++)
+
+      {
+        csvdata1[i].fillKey = {};
+
+        if (csvdata1[i].daily_change_percent >= 0 && csvdata1[i].daily_change_percent<=0.5 && csvdata1[i].market_status == 'closed')
+        {
+          csvdata1[i].fillKey = '0 to +0.5%';
+        }
+
+        if (csvdata1[i].daily_change_percent >= 0 && csvdata1[i].daily_change_percent<=0.5 && csvdata1[i].market_status == 'open')
+        {
+          csvdata1[i].fillKey = 'closed1';
+        }
+
+        if (csvdata1[i].daily_change_percent >0.5 && csvdata1[i].daily_change_percent<=1 && csvdata1[i].market_status == 'closed')
+        {
+          csvdata1[i].fillKey = '+0.5% to +1%';
+        }
+
+        if (csvdata1[i].daily_change_percent >0.5 && csvdata1[i].daily_change_percent<=1 && csvdata1[i].market_status == 'open')
+        {
+          csvdata1[i].fillKey = 'closed2';
+        }
+
+        if (csvdata1[i].daily_change_percent > 1 && csvdata1[i].market_status == 'closed') {  csvdata1[i].fillKey = 'Greater than +1%'; }
+        if (csvdata1[i].daily_change_percent > 1 && csvdata1[i].market_status == 'open') {  csvdata1[i].fillKey = 'closed3'; }
+
+        if (csvdata1[i].daily_change_percent < 0 && csvdata1[i].daily_change_percent>= -0.5 && csvdata1[i].market_status == 'closed') {  csvdata1[i].fillKey = '0 to -0.5%'; }
+        if (csvdata1[i].daily_change_percent < 0 && csvdata1[i].daily_change_percent>= -0.5 && csvdata1[i].market_status == 'open') {  csvdata1[i].fillKey = 'closed4'; }
+
+        if (csvdata1[i].daily_change_percent < -0.5 && csvdata1[i].daily_change_percent >= -1 && csvdata1[i].market_status == 'closed') {  csvdata1[i].fillKey = '-0.5% to -1%'; }
+        if (csvdata1[i].daily_change_percent < -0.5 && csvdata1[i].daily_change_percent >= -1 && csvdata1[i].market_status == 'open') {  csvdata1[i].fillKey = 'closed5'; }
+
+        if (csvdata1[i].daily_change_percent < -1 && csvdata1[i].market_status == 'closed') {  csvdata1[i].fillKey = 'Less than -1%'; }
+        if (csvdata1[i].daily_change_percent < -1 && csvdata1[i].market_status == 'open') {  csvdata1[i].fillKey = 'closed6'; }
+
+        csvdata1[ csvdata1[i].country_code] = csvdata1[i] ;
+        //console.log(csvdata1[i]);
+        delete  csvdata1[i].country_code;
+
+        delete  csvdata1[i] ;
+          }
+
+closedMap1.updateChoropleth(csvdata1);
+}
+);
+
+var openMap2 = new Datamap(
+
+      {
+          scope: 'world',
+          projection: 'equirectangular',
+          element: document.getElementById('openmap2'),
+          // projection: 'mercator',
+
+          geographyConfig: {
+                              borderWidth: 0.2,
+                              borderColor: 'white',
+                          /*  highlightBorderColor: 'black',
+                              highlightBorderWidth: 0.5,
+                              highlightFillColor: '#FFEC38',
+
+                              highlightOnHover: true,
+                              popupOnHover: true, //disable the popup while hovering
+  */
+                              popupTemplate: function(geography, csvdata1) {
+                                  if ( !csvdata1 ) return;  // makes sure that the tooltip is shown only if there is data
+                                  return '<div class="hoverinfo">'  + 'Country: <strong>'+csvdata1.country +'</strong>'+ '<br>Index: <strong>'+csvdata1.index + '</strong>'+ '<br> Change:  <strong>' +  csvdata1.ytd_change_percent + '</strong> %';},
+                              },
+          fills: {
+            '0 to +0.5%':"#96dd7e",
+            '+0.5% to +1%':"#5bbc3a",
+            'Greater than +1%':"#218700",
+            '0 to -0.5%':"#ff7575",
+            '-0.5% to -1%':"#ff3838",
+            'Less than -1%':"#ff0000",
+            'closed1':'rgba(150,221,126,0.3)',
+            'closed2':'rgba(91,188,58,0.3)',
+            'closed3':'rgba(33,135,0,0.3)',
+            'closed4': 'rgba(255,117,117,0.3)',
+            'closed5':'rgba(255,56,56,0.3)',
+            'closed6':'rgba(255,0,0,0.3)',
+            defaultFill: '#d6d6d6'
+          },
+          data: {}
+});
+
+
+
+d3.csv("wsj_dataset_compact.csv", function(error, csvdata1) {
+
+for (var i=0;i<csvdata1.length;i++)
+
+      {
+        csvdata1[i].fillKey = {};
+
+        if (csvdata1[i].ytd_change_percent >= 0 && csvdata1[i].ytd_change_percent<=0.5 && csvdata1[i].market_status == 'open')
+        {
+          csvdata1[i].fillKey = '0 to +0.5%';
+        }
+
+        if (csvdata1[i].ytd_change_percent >= 0 && csvdata1[i].ytd_change_percent<=0.5 && csvdata1[i].market_status == 'closed')
+        {
+          csvdata1[i].fillKey = 'closed1';
+        }
+
+        if (csvdata1[i].ytd_change_percent >0.5 && csvdata1[i].ytd_change_percent<=1 && csvdata1[i].market_status == 'open')
+        {
+          csvdata1[i].fillKey = '+0.5% to +1%';
+        }
+
+        if (csvdata1[i].ytd_change_percent >0.5 && csvdata1[i].ytd_change_percent<=1 && csvdata1[i].market_status == 'closed')
+        {
+          csvdata1[i].fillKey = 'closed2';
+        }
+
+        if (csvdata1[i].ytd_change_percent > 1 && csvdata1[i].market_status == 'open') {  csvdata1[i].fillKey = 'Greater than +1%'; }
+        if (csvdata1[i].ytd_change_percent > 1 && csvdata1[i].market_status == 'closed') {  csvdata1[i].fillKey = 'closed3'; }
+
+        if (csvdata1[i].ytd_change_percent < 0 && csvdata1[i].ytd_change_percent>= -0.5 && csvdata1[i].market_status == 'open') {  csvdata1[i].fillKey = '0 to -0.5%'; }
+        if (csvdata1[i].ytd_change_percent < 0 && csvdata1[i].ytd_change_percent>= -0.5 && csvdata1[i].market_status == 'closed') {  csvdata1[i].fillKey = 'closed4'; }
+
+        if (csvdata1[i].ytd_change_percent < -0.5 && csvdata1[i].ytd_change_percent >= -1 && csvdata1[i].market_status == 'open') {  csvdata1[i].fillKey = '-0.5% to -1%'; }
+        if (csvdata1[i].ytd_change_percent < -0.5 && csvdata1[i].ytd_change_percent >= -1 && csvdata1[i].market_status == 'closed') {  csvdata1[i].fillKey = 'closed5'; }
+
+        if (csvdata1[i].ytd_change_percent < -1 && csvdata1[i].market_status == 'open') {  csvdata1[i].fillKey = 'Less than -1%'; }
+        if (csvdata1[i].ytd_change_percent < -1 && csvdata1[i].market_status == 'closed') {  csvdata1[i].fillKey = 'closed6'; }
+
+        csvdata1[ csvdata1[i].country_code] = csvdata1[i] ;
+        //console.log(csvdata1[i]);
+        delete  csvdata1[i].country_code;
+
+        delete  csvdata1[i] ;
+          }
+
+openMap2.updateChoropleth(csvdata1);
+}
+);
+
+var closedMap2 = new Datamap(
+
+      {
+          scope: 'world',
+          projection: 'equirectangular',
+          element: document.getElementById('closemap2'),
+          // projection: 'mercator',
+
+          geographyConfig: {
+                              borderWidth: 0.2,
+                              borderColor: 'white',
+                          /*  highlightBorderColor: 'black',
+                              highlightBorderWidth: 0.5,
+                              highlightFillColor: '#FFEC38',
+
+                              highlightOnHover: true,
+                              popupOnHover: true, //disable the popup while hovering
+  */
+                              popupTemplate: function(geography, csvdata1) {
+                                  if ( !csvdata1 ) return;  // makes sure that the tooltip is shown only if there is data
+                                  return '<div class="hoverinfo">'  + 'Country: <strong>'+csvdata1.country +'</strong>'+ '<br>Index: <strong>'+csvdata1.index + '</strong>'+ '<br> Change:  <strong>' +  csvdata1.ytd_change_percent + '</strong> %';},
+                              },
+          fills: {
+            '0 to +0.5%':"#96dd7e",
+            '+0.5% to +1%':"#5bbc3a",
+            'Greater than +1%':"#218700",
+            '0 to -0.5%':"#ff7575",
+            '-0.5% to -1%':"#ff3838",
+            'Less than -1%':"#ff0000",
+            'closed1':'rgba(150,221,126,0.3)',
+            'closed2':'rgba(91,188,58,0.3)',
+            'closed3':'rgba(33,135,0,0.3)',
+            'closed4': 'rgba(255,117,117,0.3)',
+            'closed5':'rgba(255,56,56,0.3)',
+            'closed6':'rgba(255,0,0,0.3)',
+            defaultFill: '#d6d6d6'
+          },
+          data: {}
+});
+
+
+
+d3.csv("wsj_dataset_compact.csv", function(error, csvdata1) {
+
+for (var i=0;i<csvdata1.length;i++)
+
+      {
+        csvdata1[i].fillKey = {};
+
+        if (csvdata1[i].ytd_change_percent >= 0 && csvdata1[i].ytd_change_percent<=0.5 && csvdata1[i].market_status == 'closed')
+        {
+          csvdata1[i].fillKey = '0 to +0.5%';
+        }
+
+        if (csvdata1[i].ytd_change_percent >= 0 && csvdata1[i].ytd_change_percent<=0.5 && csvdata1[i].market_status == 'open')
+        {
+          csvdata1[i].fillKey = 'closed1';
+        }
+
+        if (csvdata1[i].ytd_change_percent >0.5 && csvdata1[i].ytd_change_percent<=1 && csvdata1[i].market_status == 'closed')
+        {
+          csvdata1[i].fillKey = '+0.5% to +1%';
+        }
+
+        if (csvdata1[i].ytd_change_percent >0.5 && csvdata1[i].ytd_change_percent<=1 && csvdata1[i].market_status == 'open')
+        {
+          csvdata1[i].fillKey = 'closed2';
+        }
+
+        if (csvdata1[i].ytd_change_percent > 1 && csvdata1[i].market_status == 'closed') {  csvdata1[i].fillKey = 'Greater than +1%'; }
+        if (csvdata1[i].ytd_change_percent > 1 && csvdata1[i].market_status == 'open') {  csvdata1[i].fillKey = 'closed3'; }
+
+        if (csvdata1[i].ytd_change_percent < 0 && csvdata1[i].ytd_change_percent>= -0.5 && csvdata1[i].market_status == 'closed') {  csvdata1[i].fillKey = '0 to -0.5%'; }
+        if (csvdata1[i].ytd_change_percent < 0 && csvdata1[i].ytd_change_percent>= -0.5 && csvdata1[i].market_status == 'open') {  csvdata1[i].fillKey = 'closed4'; }
+
+        if (csvdata1[i].ytd_change_percent < -0.5 && csvdata1[i].ytd_change_percent >= -1 && csvdata1[i].market_status == 'closed') {  csvdata1[i].fillKey = '-0.5% to -1%'; }
+        if (csvdata1[i].ytd_change_percent < -0.5 && csvdata1[i].ytd_change_percent >= -1 && csvdata1[i].market_status == 'open') {  csvdata1[i].fillKey = 'closed5'; }
+
+        if (csvdata1[i].ytd_change_percent < -1 && csvdata1[i].market_status == 'closed') {  csvdata1[i].fillKey = 'Less than -1%'; }
+        if (csvdata1[i].ytd_change_percent < -1 && csvdata1[i].market_status == 'open') {  csvdata1[i].fillKey = 'closed6'; }
+
+        csvdata1[ csvdata1[i].country_code] = csvdata1[i] ;
+        //console.log(csvdata1[i]);
+        delete  csvdata1[i].country_code;
+
+        delete  csvdata1[i] ;
+          }
+
+closedMap2.updateChoropleth(csvdata1);
+}
+);
+
+var openMap3 = new Datamap(
+
+      {
+          scope: 'world',
+          projection: 'equirectangular',
+          element: document.getElementById('openmap3'),
+          // projection: 'mercator',
+
+          geographyConfig: {
+                              borderWidth: 0.2,
+                              borderColor: 'white',
+                          /*  highlightBorderColor: 'black',
+                              highlightBorderWidth: 0.5,
+                              highlightFillColor: '#FFEC38',
+
+                              highlightOnHover: true,
+                              popupOnHover: true, //disable the popup while hovering
+  */
+                              popupTemplate: function(geography, csvdata1) {
+                                  if ( !csvdata1 ) return;  // makes sure that the tooltip is shown only if there is data
+                                  return '<div class="hoverinfo">'  + 'Country: <strong>'+csvdata1.country +'</strong>'+ '<br>Index: <strong>'+csvdata1.index + '</strong>'+ '<br> Change:  <strong>' +  csvdata1.year_change_percent + '</strong> %';},
+                              },
+          fills: {
+            '0 to +0.5%':"#96dd7e",
+            '+0.5% to +1%':"#5bbc3a",
+            'Greater than +1%':"#218700",
+            '0 to -0.5%':"#ff7575",
+            '-0.5% to -1%':"#ff3838",
+            'Less than -1%':"#ff0000",
+            'closed1':'rgba(150,221,126,0.3)',
+            'closed2':'rgba(91,188,58,0.3)',
+            'closed3':'rgba(33,135,0,0.3)',
+            'closed4': 'rgba(255,117,117,0.3)',
+            'closed5':'rgba(255,56,56,0.3)',
+            'closed6':'rgba(255,0,0,0.3)',
+            defaultFill: '#d6d6d6'
+          },
+          data: {}
+});
+
+
+
+d3.csv("wsj_dataset_compact.csv", function(error, csvdata1) {
+
+for (var i=0;i<csvdata1.length;i++)
+
+      {
+        csvdata1[i].fillKey = {};
+
+        if (csvdata1[i].year_change_percent >= 0 && csvdata1[i].year_change_percent<=0.5 && csvdata1[i].market_status == 'open')
+        {
+          csvdata1[i].fillKey = '0 to +0.5%';
+        }
+
+        if (csvdata1[i].year_change_percent >= 0 && csvdata1[i].year_change_percent<=0.5 && csvdata1[i].market_status == 'closed')
+        {
+          csvdata1[i].fillKey = 'closed1';
+        }
+
+        if (csvdata1[i].year_change_percent >0.5 && csvdata1[i].year_change_percent<=1 && csvdata1[i].market_status == 'open')
+        {
+          csvdata1[i].fillKey = '+0.5% to +1%';
+        }
+
+        if (csvdata1[i].year_change_percent >0.5 && csvdata1[i].year_change_percent<=1 && csvdata1[i].market_status == 'closed')
+        {
+          csvdata1[i].fillKey = 'closed2';
+        }
+
+        if (csvdata1[i].year_change_percent > 1 && csvdata1[i].market_status == 'open') {  csvdata1[i].fillKey = 'Greater than +1%'; }
+        if (csvdata1[i].year_change_percent > 1 && csvdata1[i].market_status == 'closed') {  csvdata1[i].fillKey = 'closed3'; }
+
+        if (csvdata1[i].year_change_percent < 0 && csvdata1[i].year_change_percent>= -0.5 && csvdata1[i].market_status == 'open') {  csvdata1[i].fillKey = '0 to -0.5%'; }
+        if (csvdata1[i].year_change_percent < 0 && csvdata1[i].year_change_percent>= -0.5 && csvdata1[i].market_status == 'closed') {  csvdata1[i].fillKey = 'closed4'; }
+
+        if (csvdata1[i].year_change_percent < -0.5 && csvdata1[i].year_change_percent >= -1 && csvdata1[i].market_status == 'open') {  csvdata1[i].fillKey = '-0.5% to -1%'; }
+        if (csvdata1[i].year_change_percent < -0.5 && csvdata1[i].year_change_percent >= -1 && csvdata1[i].market_status == 'closed') {  csvdata1[i].fillKey = 'closed5'; }
+
+        if (csvdata1[i].year_change_percent < -1 && csvdata1[i].market_status == 'open') {  csvdata1[i].fillKey = 'Less than -1%'; }
+        if (csvdata1[i].year_change_percent < -1 && csvdata1[i].market_status == 'closed') {  csvdata1[i].fillKey = 'closed6'; }
+
+        csvdata1[ csvdata1[i].country_code] = csvdata1[i] ;
+        //console.log(csvdata1[i]);
+        delete  csvdata1[i].country_code;
+
+        delete  csvdata1[i] ;
+          }
+
+openMap3.updateChoropleth(csvdata1);
+}
+);
+
+var closedMap3 = new Datamap(
+
+      {
+          scope: 'world',
+          projection: 'equirectangular',
+          element: document.getElementById('closemap3'),
+          // projection: 'mercator',
+
+          geographyConfig: {
+                              borderWidth: 0.2,
+                              borderColor: 'white',
+                          /*  highlightBorderColor: 'black',
+                              highlightBorderWidth: 0.5,
+                              highlightFillColor: '#FFEC38',
+
+                              highlightOnHover: true,
+                              popupOnHover: true, //disable the popup while hovering
+  */
+                              popupTemplate: function(geography, csvdata1) {
+                                  if ( !csvdata1 ) return;  // makes sure that the tooltip is shown only if there is data
+                                  return '<div class="hoverinfo">'  + 'Country: <strong>'+csvdata1.country +'</strong>'+ '<br>Index: <strong>'+csvdata1.index + '</strong>'+ '<br> Change:  <strong>' +  csvdata1.year_change_percent + '</strong> %';},
+                              },
+          fills: {
+            '0 to +0.5%':"#96dd7e",
+            '+0.5% to +1%':"#5bbc3a",
+            'Greater than +1%':"#218700",
+            '0 to -0.5%':"#ff7575",
+            '-0.5% to -1%':"#ff3838",
+            'Less than -1%':"#ff0000",
+            'closed1':'rgba(150,221,126,0.3)',
+            'closed2':'rgba(91,188,58,0.3)',
+            'closed3':'rgba(33,135,0,0.3)',
+            'closed4': 'rgba(255,117,117,0.3)',
+            'closed5':'rgba(255,56,56,0.3)',
+            'closed6':'rgba(255,0,0,0.3)',
+            defaultFill: '#d6d6d6'
+          },
+          data: {}
+});
+
+
+
+d3.csv("wsj_dataset_compact.csv", function(error, csvdata1) {
+
+for (var i=0;i<csvdata1.length;i++)
+
+      {
+        csvdata1[i].fillKey = {};
+
+        if (csvdata1[i].year_change_percent >= 0 && csvdata1[i].year_change_percent<=0.5 && csvdata1[i].market_status == 'closed')
+        {
+          csvdata1[i].fillKey = '0 to +0.5%';
+        }
+
+        if (csvdata1[i].year_change_percent >= 0 && csvdata1[i].year_change_percent<=0.5 && csvdata1[i].market_status == 'open')
+        {
+          csvdata1[i].fillKey = 'closed1';
+        }
+
+        if (csvdata1[i].year_change_percent >0.5 && csvdata1[i].year_change_percent<=1 && csvdata1[i].market_status == 'closed')
+        {
+          csvdata1[i].fillKey = '+0.5% to +1%';
+        }
+
+        if (csvdata1[i].year_change_percent >0.5 && csvdata1[i].year_change_percent<=1 && csvdata1[i].market_status == 'open')
+        {
+          csvdata1[i].fillKey = 'closed2';
+        }
+
+        if (csvdata1[i].year_change_percent > 1 && csvdata1[i].market_status == 'closed') {  csvdata1[i].fillKey = 'Greater than +1%'; }
+        if (csvdata1[i].year_change_percent > 1 && csvdata1[i].market_status == 'open') {  csvdata1[i].fillKey = 'closed3'; }
+
+        if (csvdata1[i].year_change_percent < 0 && csvdata1[i].year_change_percent>= -0.5 && csvdata1[i].market_status == 'closed') {  csvdata1[i].fillKey = '0 to -0.5%'; }
+        if (csvdata1[i].year_change_percent < 0 && csvdata1[i].year_change_percent>= -0.5 && csvdata1[i].market_status == 'open') {  csvdata1[i].fillKey = 'closed4'; }
+
+        if (csvdata1[i].year_change_percent < -0.5 && csvdata1[i].year_change_percent >= -1 && csvdata1[i].market_status == 'closed') {  csvdata1[i].fillKey = '-0.5% to -1%'; }
+        if (csvdata1[i].year_change_percent < -0.5 && csvdata1[i].year_change_percent >= -1 && csvdata1[i].market_status == 'open') {  csvdata1[i].fillKey = 'closed5'; }
+
+        if (csvdata1[i].year_change_percent < -1 && csvdata1[i].market_status == 'closed') {  csvdata1[i].fillKey = 'Less than -1%'; }
+        if (csvdata1[i].year_change_percent < -1 && csvdata1[i].market_status == 'open') {  csvdata1[i].fillKey = 'closed6'; }
+
+        csvdata1[ csvdata1[i].country_code] = csvdata1[i] ;
+        //console.log(csvdata1[i]);
+        delete  csvdata1[i].country_code;
+
+        delete  csvdata1[i] ;
+          }
+
+closedMap3.updateChoropleth(csvdata1);
+}
+);
+
+var openMap4 = new Datamap(
+
+      {
+          scope: 'world',
+          projection: 'equirectangular',
+          element: document.getElementById('openmap4'),
+          // projection: 'mercator',
+
+          geographyConfig: {
+                              borderWidth: 0.2,
+                              borderColor: 'white',
+                          /*  highlightBorderColor: 'black',
+                              highlightBorderWidth: 0.5,
+                              highlightFillColor: '#FFEC38',
+
+                              highlightOnHover: true,
+                              popupOnHover: true, //disable the popup while hovering
+  */
+                              popupTemplate: function(geography, csvdata1) {
+                                  if ( !csvdata1 ) return;  // makes sure that the tooltip is shown only if there is data
+                                  return '<div class="hoverinfo">'  + 'Country: <strong>'+csvdata1.country +'</strong>'+ '<br>Index: <strong>'+csvdata1.index + '</strong>'+ '<br> Change:  <strong>' +  csvdata1.threeYear_change_percent + '</strong> %';},
+                              },
+          fills: {
+            '0 to +0.5%':"#96dd7e",
+            '+0.5% to +1%':"#5bbc3a",
+            'Greater than +1%':"#218700",
+            '0 to -0.5%':"#ff7575",
+            '-0.5% to -1%':"#ff3838",
+            'Less than -1%':"#ff0000",
+            'closed1':'rgba(150,221,126,0.3)',
+            'closed2':'rgba(91,188,58,0.3)',
+            'closed3':'rgba(33,135,0,0.3)',
+            'closed4': 'rgba(255,117,117,0.3)',
+            'closed5':'rgba(255,56,56,0.3)',
+            'closed6':'rgba(255,0,0,0.3)',
+            defaultFill: '#d6d6d6'
+          },
+          data: {}
+});
+
+
+
+d3.csv("wsj_dataset_compact.csv", function(error, csvdata1) {
+
+for (var i=0;i<csvdata1.length;i++)
+
+      {
+        csvdata1[i].fillKey = {};
+
+        if (csvdata1[i].threeYear_change_percent >= 0 && csvdata1[i].threeYear_change_percent<=0.5 && csvdata1[i].market_status == 'open')
+        {
+          csvdata1[i].fillKey = '0 to +0.5%';
+        }
+
+        if (csvdata1[i].threeYear_change_percent >= 0 && csvdata1[i].threeYear_change_percent<=0.5 && csvdata1[i].market_status == 'closed')
+        {
+          csvdata1[i].fillKey = 'closed1';
+        }
+
+        if (csvdata1[i].threeYear_change_percent >0.5 && csvdata1[i].threeYear_change_percent<=1 && csvdata1[i].market_status == 'open')
+        {
+          csvdata1[i].fillKey = '+0.5% to +1%';
+        }
+
+        if (csvdata1[i].threeYear_change_percent >0.5 && csvdata1[i].threeYear_change_percent<=1 && csvdata1[i].market_status == 'closed')
+        {
+          csvdata1[i].fillKey = 'closed2';
+        }
+
+        if (csvdata1[i].threeYear_change_percent > 1 && csvdata1[i].market_status == 'open') {  csvdata1[i].fillKey = 'Greater than +1%'; }
+        if (csvdata1[i].threeYear_change_percent > 1 && csvdata1[i].market_status == 'closed') {  csvdata1[i].fillKey = 'closed3'; }
+
+        if (csvdata1[i].threeYear_change_percent < 0 && csvdata1[i].threeYear_change_percent>= -0.5 && csvdata1[i].market_status == 'open') {  csvdata1[i].fillKey = '0 to -0.5%'; }
+        if (csvdata1[i].threeYear_change_percent < 0 && csvdata1[i].threeYear_change_percent>= -0.5 && csvdata1[i].market_status == 'closed') {  csvdata1[i].fillKey = 'closed4'; }
+
+        if (csvdata1[i].threeYear_change_percent < -0.5 && csvdata1[i].threeYear_change_percent >= -1 && csvdata1[i].market_status == 'open') {  csvdata1[i].fillKey = '-0.5% to -1%'; }
+        if (csvdata1[i].threeYear_change_percent < -0.5 && csvdata1[i].threeYear_change_percent >= -1 && csvdata1[i].market_status == 'closed') {  csvdata1[i].fillKey = 'closed5'; }
+
+        if (csvdata1[i].threeYear_change_percent < -1 && csvdata1[i].market_status == 'open') {  csvdata1[i].fillKey = 'Less than -1%'; }
+        if (csvdata1[i].threeYear_change_percent < -1 && csvdata1[i].market_status == 'closed') {  csvdata1[i].fillKey = 'closed6'; }
+
+        csvdata1[ csvdata1[i].country_code] = csvdata1[i] ;
+        //console.log(csvdata1[i]);
+        delete  csvdata1[i].country_code;
+
+        delete  csvdata1[i] ;
+          }
+
+openMap4.updateChoropleth(csvdata1);
+}
+);
+
+var closedMap4 = new Datamap(
+
+      {
+          scope: 'world',
+          projection: 'equirectangular',
+          element: document.getElementById('closemap4'),
+          // projection: 'mercator',
+
+          geographyConfig: {
+                              borderWidth: 0.2,
+                              borderColor: 'white',
+                          /*  highlightBorderColor: 'black',
+                              highlightBorderWidth: 0.5,
+                              highlightFillColor: '#FFEC38',
+
+                              highlightOnHover: true,
+                              popupOnHover: true, //disable the popup while hovering
+  */
+                              popupTemplate: function(geography, csvdata1) {
+                                  if ( !csvdata1 ) return;  // makes sure that the tooltip is shown only if there is data
+                                  return '<div class="hoverinfo">'  + 'Country: <strong>'+csvdata1.country +'</strong>'+ '<br>Index: <strong>'+csvdata1.index + '</strong>'+ '<br> Change:  <strong>' +  csvdata1.threeYear_change_percent + '</strong> %';},
+                              },
+          fills: {
+            '0 to +0.5%':"#96dd7e",
+            '+0.5% to +1%':"#5bbc3a",
+            'Greater than +1%':"#218700",
+            '0 to -0.5%':"#ff7575",
+            '-0.5% to -1%':"#ff3838",
+            'Less than -1%':"#ff0000",
+            'closed1':'rgba(150,221,126,0.3)',
+            'closed2':'rgba(91,188,58,0.3)',
+            'closed3':'rgba(33,135,0,0.3)',
+            'closed4': 'rgba(255,117,117,0.3)',
+            'closed5':'rgba(255,56,56,0.3)',
+            'closed6':'rgba(255,0,0,0.3)',
+            defaultFill: '#d6d6d6'
+          },
+          data: {}
+});
+
+
+
+d3.csv("wsj_dataset_compact.csv", function(error, csvdata1) {
+
+for (var i=0;i<csvdata1.length;i++)
+
+      {
+        csvdata1[i].fillKey = {};
+
+        if (csvdata1[i].threeYear_change_percent >= 0 && csvdata1[i].threeYear_change_percent<=0.5 && csvdata1[i].market_status == 'closed')
+        {
+          csvdata1[i].fillKey = '0 to +0.5%';
+        }
+
+        if (csvdata1[i].threeYear_change_percent >= 0 && csvdata1[i].threeYear_change_percent<=0.5 && csvdata1[i].market_status == 'open')
+        {
+          csvdata1[i].fillKey = 'closed1';
+        }
+
+        if (csvdata1[i].threeYear_change_percent >0.5 && csvdata1[i].threeYear_change_percent<=1 && csvdata1[i].market_status == 'closed')
+        {
+          csvdata1[i].fillKey = '+0.5% to +1%';
+        }
+
+        if (csvdata1[i].threeYear_change_percent >0.5 && csvdata1[i].threeYear_change_percent<=1 && csvdata1[i].market_status == 'open')
+        {
+          csvdata1[i].fillKey = 'closed2';
+        }
+
+        if (csvdata1[i].threeYear_change_percent > 1 && csvdata1[i].market_status == 'closed') {  csvdata1[i].fillKey = 'Greater than +1%'; }
+        if (csvdata1[i].threeYear_change_percent > 1 && csvdata1[i].market_status == 'open') {  csvdata1[i].fillKey = 'closed3'; }
+
+        if (csvdata1[i].threeYear_change_percent < 0 && csvdata1[i].threeYear_change_percent>= -0.5 && csvdata1[i].market_status == 'closed') {  csvdata1[i].fillKey = '0 to -0.5%'; }
+        if (csvdata1[i].threeYear_change_percent < 0 && csvdata1[i].threeYear_change_percent>= -0.5 && csvdata1[i].market_status == 'open') {  csvdata1[i].fillKey = 'closed4'; }
+
+        if (csvdata1[i].threeYear_change_percent < -0.5 && csvdata1[i].threeYear_change_percent >= -1 && csvdata1[i].market_status == 'closed') {  csvdata1[i].fillKey = '-0.5% to -1%'; }
+        if (csvdata1[i].threeYear_change_percent < -0.5 && csvdata1[i].threeYear_change_percent >= -1 && csvdata1[i].market_status == 'open') {  csvdata1[i].fillKey = 'closed5'; }
+
+        if (csvdata1[i].threeYear_change_percent < -1 && csvdata1[i].market_status == 'closed') {  csvdata1[i].fillKey = 'Less than -1%'; }
+        if (csvdata1[i].threeYear_change_percent < -1 && csvdata1[i].market_status == 'open') {  csvdata1[i].fillKey = 'closed6'; }
+
+        csvdata1[ csvdata1[i].country_code] = csvdata1[i] ;
+        //console.log(csvdata1[i]);
+        delete  csvdata1[i].country_code;
+
+        delete  csvdata1[i] ;
+          }
+
+closedMap4.updateChoropleth(csvdata1);
+}
+);
+
+
+
+
+  </script>
+</body>

@@ -414,7 +414,7 @@
       function displayAll() {
           changeClass();
           displayCS();
-          displayGen(genData.length-1);
+          displayGen(0);
       }
 
       function changeClass() {
@@ -489,13 +489,23 @@
                     d3.select(".candle"+i).classed("hoved", false);
                     d3.select(".volume"+i).classed("hoved", false);
                     d3.select(".sigma"+i).classed("hoved", false);
-                    displayGen(genData.length-1);
+                    displayGen(0);
+                })
+                .on("click", function(d, i) {
+                    console.log(getDate(i));
                 });
+
       }
 
       function displayGen(mark) {
           var header      = csheader();
           d3.select("#infobar").datum(genData.slice(mark)[0]).call(header);
+      }
+
+      function getDate(mark) {
+          var stringTime = d3.time.format("%Y-%m-%d");
+          var timeString = stringTime(genData[mark].timestamp);
+          return timeString;
       }
 
       var file_path = "daily_GOOGL.csv";
